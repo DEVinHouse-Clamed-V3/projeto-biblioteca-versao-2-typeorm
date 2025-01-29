@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
+@Entity()
 class Livro {
     @PrimaryGeneratedColumn()
      id: number
