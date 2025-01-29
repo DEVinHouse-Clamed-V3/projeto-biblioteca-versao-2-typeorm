@@ -22,4 +22,17 @@ livroRoutes.post('/AdicionarLivro', async (req:Request, res:Response) => {
     res.status(201).json(livro_salvo)
 })
 
+livroRoutes.get('/ExibirLivros', async (req:Request, res:Response) => {
+    const livros = await livro_repository.find()
+    if(Object(livros).keys == 0)
+        {
+            res.status(202).json("não há livros cadastrados!")
+        }
+    else
+    {
+        res.status(202).json(livros)  
+    }
+    
+})
+
 export default livroRoutes;
