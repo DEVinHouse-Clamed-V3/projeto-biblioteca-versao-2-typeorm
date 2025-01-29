@@ -32,6 +32,19 @@ livroRoutes.get('/ExibirLivros', async (req:Request, res:Response) => {
     {
         res.status(202).json(livros)  
     }
+
+livroRoutes.get('/ExibirLivro/:id', async (req:Request, res:Response) => {
+    const search_id = req.params.id
+    const livro = await livro_repository.findOneBy({id: Number(search_id)})
+    if(!livro)
+        {
+            res.status(202).json("O livro especificado não foi encontrado!")
+        }
+    else
+    {
+        res.status(202).json(livro)  
+    }
+})
     
 })
 
