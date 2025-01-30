@@ -63,7 +63,30 @@ autorRoutes.get("/", async (req: Request, res: Response) => {
 
 // Buscar um autor específico: Permitir ao usuário buscar um autor por ID.
 autorRoutes.get("/:id", async (req: Request, res: Response) => {
-    
+    try {
+        const { id } = req.params
+
+        if(!id) {
+            res.status(400).json({ message: "O campo ID é obrigatório" })
+        }
+
+        const author = autorRepository.find({
+            where: {
+                id: parseInt(id)
+            }
+        })
+
+        if(!author) {
+            res.status(404).json({ message: "Autor não foi encontrado."})
+            return
+        }
+
+        res.status(200).json(author)
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Erro ao buscar autor." })
+    }
 })
 
 export default autorRoutes;
