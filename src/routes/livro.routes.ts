@@ -66,7 +66,20 @@ livroRoutes.put('/AtualizarLivro/:id', async (req: Request, res: Response) => {
 
     const book_updated = await livro_repository.save(book_to_uptade as Livro)
     res.status(202).json({book_updated})
+})
+
+livroRoutes.delete('/DeletarLivro/:id', async (req: Request, res: Response) => {
+    const body_id = req.params.id
+    const book_to_delete = await livro_repository.findOneBy({id: Number(body_id)})
+
+    if(!book_to_delete)
+        {
+            res.status(404).json("O livro espeficado não foi encontrado!")
+        }
     
+    
+    await livro_repository.delete({id: Number(body_id)})
+    res.status(202).json("O livro espeficado foi removido!")
 })
     
 })
