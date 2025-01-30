@@ -45,6 +45,29 @@ livroRoutes.get('/ExibirLivro/:id', async (req:Request, res:Response) => {
         res.status(202).json(livro)  
     }
 })
+
+livroRoutes.put('/AtualizarLivro/:id', async (req: Request, res: Response) => {
+    const new_info_id = req.params.id
+    const new_info = req.body as Livro;
+    const book_to_uptade = await livro_repository.findOneBy({id: Number(new_info_id)})
+
+
+    if(!book_to_uptade)
+        {
+            res.status(404).json("O livro especificado nao foi encontrado")
+        }
+
+    if(new_info.id)
+        {
+            res.status(403).json("Não é permitido alterar o id de um livro!")
+        }
+    
+    Object.assign(book_to_uptade as Livro, new_info) 
+
+    const book_updated = await livro_repository.save(book_to_uptade as Livro)
+    res.status(202).json({book_updated})
+    
+})
     
 })
 
