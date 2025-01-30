@@ -61,14 +61,16 @@ autorRoutes.get("/", async (req: Request, res: Response) => {
     }
 })
 
+// Buscar um autor específico: Permitir ao usuário buscar um autor por ID.
+autorRoutes.get("/:id", async (req: Request, res: Response) => {
+    
+})
+
 export default autorRoutes;
 
+
+
 /* 3 - Rotas: Crie as rotas abaixo para gerenciar as operações CRUD de autores. Ele deverá ser capaz de:
-
-
-    Buscar todos os autores: Retornar uma lista de todos os autores cadastrados permitindo pesquisar por nome.
-
-    Buscar um autor específico: Permitir ao usuário buscar um autor por ID.
 
     Atualizar as informações de um autor: Permitir ao usuário atualizar o nome, biografia, data de nascimento, nacionalidade e se o autor está ativo.
 
