@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { AppDataSource } from '../database/data-source';
 import Autor from '../entities/Autor';
+import { Like } from 'typeorm';
 
 const autorRoutes = Router();
 
@@ -33,10 +34,32 @@ autorRoutes.post("/", async (req: Request, res: Response) => {
 
         res.status(500).json({ message: "Erro ao cadastrar autor."})
     }
-    
 })
 
 //Buscar todos os autores: Retornar uma lista de todos os autores cadastrados permitindo pesquisar por nome.
+autorRoutes.get("/", async (req: Request, res: Response) => {
+    try {
+        const { name } = req.query;
+
+        let authors;
+
+        if (name) {
+            authors = await autorRepository.find({
+                where: { 
+                    name: Like(`%${name}%`) 
+                }
+            });
+        } else {
+            authors = await autorRepository.find();
+        }
+
+        res.status(200).json(authors);
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Erro ao buscar autores." })
+    }
+})
 
 export default autorRoutes;
 
