@@ -81,6 +81,29 @@ livroRoutes.delete('/DeletarLivro/:id', async (req: Request, res: Response) => {
     await livro_repository.delete({id: Number(body_id)})
     res.status(202).json("O livro espeficado foi removido!")
 })
+
+livroRoutes.get('/LivrosRank/:language?', async (req:Request, res: Response) => {
+        const body_language = req.query.language as string // gets the language parameter
+        console.log("language -> " + body_language)
+        
+         
+        const livros = await livro_repository.find({
+            where: { language: body_language },
+            order: { page_count: "DESC" } // Ordenando pelo título em ordem crescente
+        });
+            
+        
+        
+         if(livros.length == 0)
+                {
+                    res.status(202).json("não há livros cadastrados!")
+                }
+            
+            else
+            {
+                res.status(202).json(livros)  
+            }
+})
     
 })
 
