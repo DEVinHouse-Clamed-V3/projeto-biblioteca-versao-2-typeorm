@@ -89,13 +89,49 @@ autorRoutes.get("/:id", async (req: Request, res: Response) => {
     }
 })
 
+//Atualizar as informações de um autor: Permitir ao usuário atualizar o nome, biografia, data de nascimento, nacionalidade e se o autor está ativo.
+autorRoutes.put('/', async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { created_at, updated_at } = req.body;
+
+        if(id || created_at || updated_at) {
+            res.status(403).json({ message: "Os campos id, created_at e updated_at não podem ser alterados." })
+            return
+        }
+
+        //verifica se autor existe
+        const author = await autorRepository.findOne({
+            where: {
+                id: parseInt(id)
+            }
+        })
+
+        if(!author) {
+            res.status(404).json({ message: "Autor informado não existe." })
+            return
+        }
+
+        const authorUodate = req.body
+
+        Object.assign(author, authorUodate);
+
+        await autorRepository.save(author)
+
+        res.status(200).json(author)
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Erro ao atualizar autor."})
+    }
+
+})
+
 export default autorRoutes;
 
 
 
 /* 3 - Rotas: Crie as rotas abaixo para gerenciar as operações CRUD de autores. Ele deverá ser capaz de:
-
-    Atualizar as informações de um autor: Permitir ao usuário atualizar o nome, biografia, data de nascimento, nacionalidade e se o autor está ativo.
 
     Deletar um autor: Permitir ao usuário remover um autor da biblioteca.
 
