@@ -127,12 +127,49 @@ autorRoutes.put('/', async (req: Request, res: Response) => {
 
 })
 
+//Deletar um autor: Permitir ao usuário remover um autor da biblioteca.
+autorRoutes.delete("/:id", async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+
+        if(!id) {
+            res.status(400).json({ message: "O campo ID é obrigatório" })
+        }
+
+        const author = await autorRepository.findOne({
+            where: {
+                id: parseInt(id)
+            }
+        })
+
+        if(!author) {
+            res.status(404).json({ message: "Autor não foi encontrado."})
+            return
+        }
+
+        await autorRepository.delete(author)
+
+        res.status(200).json({ message: "Autor removido com sucesso." })
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Erro ao remover autor." })
+    }
+})
+
+//Autores do mês: uma rota que liste todos os autores que tem data de nascimento no mês atual. */
+autorRoutes.get("/month", async (req: Request, res: Response) => {
+    try {
+        const authors = await autorRepository.createQueryBuilder("autor")
+            .where("EXTRACT(MONTH FROM autor.birthdate) = EXTRACT(MONTH FROM CURRENT_DATE)")
+            .getMany();
+
+        res.status(200).json(authors)
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Erro ao buscar autores." })
+    }
+})
+
 export default autorRoutes;
-
-
-
-/* 3 - Rotas: Crie as rotas abaixo para gerenciar as operações CRUD de autores. Ele deverá ser capaz de:
-
-    Deletar um autor: Permitir ao usuário remover um autor da biblioteca.
-
-    Autores do mês: uma rota que liste todos os autores que tem data de nascimento no mês atual. */
